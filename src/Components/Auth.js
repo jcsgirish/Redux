@@ -1,10 +1,21 @@
-import classes from './Auth.module.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from './Store';
+import classes from './Auth.module.css';
+import UserProfile from './UserProfile';
 
 const Auth = () => {
+  let dispatch=useDispatch()
+  const handleLogin=(event)=>{
+    event.preventDefault()
+
+    dispatch(authActions.login());
+  }
+  let authenticationStatus=useSelector(state=>state.authentication.isAuthenticated)
   return (
-    <main className={classes.auth}>
-      <section>
-        <form>
+    <>
+     {!authenticationStatus && <main className={classes.auth}>
+     <section>
+        <form  onSubmit={handleLogin}>
           <div className={classes.control}>
             <label htmlFor='email'>Email</label>
             <input type='email' id='email' />
@@ -13,10 +24,12 @@ const Auth = () => {
             <label htmlFor='password'>Password</label>
             <input type='password' id='password' />
           </div>
-          <button>Login</button>
+          <button onClick={handleLogin}>Login</button>
         </form>
       </section>
-    </main>
+    </main>}
+      {authenticationStatus && <UserProfile/>}
+      </>
   );
 };
 
